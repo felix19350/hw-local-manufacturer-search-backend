@@ -1,0 +1,367 @@
+openapi: '3.0.0'
+info:
+  description: |
+    The aim of this project is to provide an easily accessible database of local manufacturers that can be contacted to
+    build critical equipment in the context of #COVID19".
+  version: "0.1"
+  title: Local manufacturer database
+  contact: {}
+servers:
+  - url: "api.domain.com/v1" #TBD
+paths:
+  /equipment:
+    get:
+      operationId: equipmentSearch
+      summary: |
+        Allows the caller to search for a specific equipment type based on several criteria, in particular geographic proximity.
+      tags:
+        - public API
+      # security: TODO: TBD
+      parameters:
+        - $ref: "#/components/parameters/q"
+        - $ref: "#/components/parameters/lat"
+        - $ref: "#/components/parameters/lng"
+        - $ref: "#/components/parameters/radiusInMeters"
+        - $ref: "#/components/parameters/country"
+        - $ref: "#/components/parameters/city"
+        - $ref: "#/components/parameters/sort"
+        - $ref: "#/components/parameters/limit"
+        - $ref: "#/components/parameters/offset"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/EquipmentResultsPage"
+
+
+#    post:
+#      operationId: equipmentCreate
+#      summary: |
+#        Allows the caller (volunteer) to add a new equipment to the databse.
+#      tags:
+#        - volunteer only API
+#      security:
+#        # TODO: add if applicable
+#      parameters:
+#        # TODO: add query parameters if applicable
+#      requestBody:
+#        # TODO: add request body if applicable
+#      responses:
+#        "201":
+#          description: "Created" # TODO: Change if needed
+#          content:
+#            # TODO: Add response content
+#  /equipment/{equipmentId}:
+#    put:
+#      operationId: equipmentEdit
+#      summary: |
+#        Allows the caller (volunteer) to update an existing equipment belonging to him.
+#      tags:
+#        - volunteer only API
+#      security:
+#        # TODO: add if applicable
+#      parameters:
+#        # TODO: add query parameters if applicable
+#      requestBody:
+#        # TODO: add request body if applicable
+#      responses:
+#        "200":
+#          description: "Updated" # TODO: Change if needed
+#          content:
+#            # TODO: Add response content
+#    delete:
+#      operationId: equipmentDelete
+#      summary: |
+#        Allows the caller (volunteer) to delete an existing equipment belonging to him.
+#      tags:
+#        - volunteer only API
+#      security:
+#        # TODO: add if applicable
+#      parameters:
+#        # TODO: add query parameters if applicable
+#      requestBody:
+#        # TODO: add request body if applicable
+#      responses:
+#        "204":
+#          description: "No content" # TODO: Change if needed
+#  /materialInStock:
+#    get:
+#      operationId: materialInStockSearch
+#      summary: |
+#        Allows the caller to search for volunteers that have a given material in stock based on several criteria, in particular
+#        geographic proximity.
+#      tags:
+#        - public API
+#      security:
+#      # TODO: add if applicable
+#      parameters:
+#      # TODO: add query parameters if applicable
+#      responses:
+#        "200":
+#          description: "OK" # TODO: Change if needed
+#          content:
+#          # TODO: Add response content
+#    post:
+#      operationId: materialInStockCreate
+#      summary: |
+#        Allows the caller (volunteer) to add a new stock of material.
+#      tags:
+#        - volunteer only API
+#      security:
+#        # TODO: add if applicable
+#      parameters:
+#        # TODO: add query parameters if applicable
+#      requestBody:
+#        # TODO: add request body if applicable
+#      responses:
+#        "201":
+#          description: "Created" # TODO: Change if needed
+#          content:
+#            # TODO: Add response content
+#  /materialInStock/{equipmentId}:
+#    put:
+#      operationId: materialInStockUpdate
+#      summary: |
+#        Allows  the caller (volunteer) to update the details of a given material in stock
+#      tags:
+#        - volunteer only API
+#      security:
+#        # TODO: add if applicable
+#      parameters:
+#        # TODO: add query parameters if applicable
+#      requestBody:
+#        # TODO: add request body if applicable
+#      responses:
+#        "200":
+#          description: "Updated" # TODO: Change if needed
+#          content:
+#            # TODO: Add response content
+#    delete:
+#      operationId: materialInStockDelete
+#      summary: |
+#        Allows the caller (volunteer) to delete the details of a given material in stock
+#      tags: [ ]
+#      security:
+#        # TODO: add if applicable
+#      parameters:
+#        # TODO: add query parameters if applicable
+#      requestBody:
+#        # TODO: add request body if applicable
+#      responses:
+#        "204":
+#          description: "No content" # TODO: Change if needed
+#  /entity/{id}:
+#    get:
+#      operationId: getEntityDetail
+#      summary: |
+#        Allows the operator to view the full details of the registered entities (volunteers, persons or companies).
+#      tags:
+#        - public API
+#      security:
+#        # TODO: add if applicable
+#      parameters:
+#        # TODO: add query parameters if applicable
+#      responses:
+#        "200":
+#          description: "OK" # TODO: Change if needed
+#          content:
+#            # TODO: Add response content
+
+components:
+  # securitySchemes: TODO: Add security schemes
+  parameters:
+    q:
+      in: query
+      name: q
+      description: |
+        The term to search for.
+      required: false
+      schema:
+        type: string
+
+    # Coordinate location based search
+    lat:
+      in: query
+      name: lat
+      description: |
+        Latitude for location based searches. This filter is only taken into account if the lng and
+        radius in meters field are present
+      schema:
+        type: number
+    lng:
+      in: query
+      name: lng
+      description: |
+        Longitude for location based searches. This filter is only taken into account if the lat and
+        radius in meters fields are present
+      schema:
+        type: number
+    radiusInMeters:
+      in: query
+      name: radiusInMeters
+      description: |
+        Radius for location based searches. This filter is only taken into account if the lat and
+        lng in meters fields are present
+      schema:
+        type: integer
+
+    # Other types of geographic searches
+    country:
+      in: query
+      name: country
+      description: |
+        ISO 2 country code to search for.
+      schema:
+        type: string
+        format: ISO2CountryCode
+
+    city:
+      in: query
+      name: country
+      description: |
+        ISO 2 country code to search for.
+      schema:
+        type: string
+        format: ISO2CountryCode
+
+    sort:
+      in: query
+      name: sort
+      description: |
+        Comma-separated list of fields to sort by.To indicate sorting direction, fields may be prefixed with + (ascending)
+        or - (descending). Available fields are: updatedAt
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        minItems: 1
+        items:
+          type: string
+
+    # Pagination
+    limit:
+      in: query
+      name: limit
+      description: |
+        Client suggested limit to restrict the number of entries on a page.
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+    offset:
+      in: query
+      name: limit
+      description: |
+        Numeric offset of the first element provided on a page representing a collection request.
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+
+  schemas:
+    Contact:
+      type: object
+      properties:
+        slack:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+    Entity:
+      description: A company or person that has some resources (equipment or material)
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        certifications:
+          type: string
+        experience:
+          type: string
+        contacts:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/Contact"
+    Site:
+      description: A physical site where some equipment is located
+      type: object
+      properties:
+        country:
+          description: ISO 2 country code
+          type: string
+          format: ISO2CountryCode
+        city:
+          # TBD: use UN LOCODE?
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+
+    EquipmentType:
+      description: Info about equipment categorization (e.g type=3d printer, category=FFF)
+      type: object
+      properties:
+        "type":
+          type: string
+        category:
+          type: string
+
+    Equipment:
+      description: An actual physical equipment
+      type: object
+      properties:
+        id:
+          type: integer
+        entity:
+          $ref: "#/components/schemas/Entity"
+        site:
+          $ref: "#/components/schemas/Site"
+        equipmentType:
+          $ref: "#/components/schemas/EquipmentType"
+        brand:
+          type: string
+        model:
+          type: string
+        miscDetails:
+          type: string
+        quantity:
+          type: integer
+          minimum: 1
+
+    PaginationLink:
+      nullable: true
+      type: string
+      format: URL
+
+    EquipmentResultsPage:
+      type: object
+      properties:
+        cursors:
+          description: Links to the usual pages for pagination purposes
+          type: object
+          properties:
+            self:
+              $ref: "#/components/schemas/PaginationLink"
+            first:
+              $ref: "#/components/schemas/PaginationLink"
+            last:
+              $ref: "#/components/schemas/PaginationLink"
+            next:
+              $ref: "#/components/schemas/PaginationLink"
+            prev:
+              $ref: "#/components/schemas/PaginationLink"
+        items:
+          type: array
+          minItems: 0
+          items:
+            $ref: "#/components/schemas/Equipment"
