@@ -1,5 +1,15 @@
 # Hardware Manufacturer Database - backend
 
+<br/>
+<br/>
+<br/>
+
+**DEPRECATED: moved to** https://github.com/helpfulengineering/project-manufacturer-database
+
+<br/>
+<br/>
+<br/>
+
 The aim of this project is to provide an easily accessible database of local manufacturers that can be contacted to
 build critical equipment in the context of #COVID19".
 
